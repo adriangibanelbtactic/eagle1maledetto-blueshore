@@ -1,5 +1,7 @@
 # Blueshore
 
+**Website: <https://eagle1maledetto.github.io/blueshore/>**
+
 A family of four colour-matched skins for the **Zimbra Classic web client**
 (Zimbra FOSS 10.x). Same layout, typography and density in every variant;
 only the palette changes.

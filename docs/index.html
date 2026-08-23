@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blueshore — modern skins for the Zimbra Classic UI</title>
+<meta name="description" content="Blueshore is a family of four open source skins (light and dark) for the Zimbra FOSS Classic web client: SVG icons, bundled typography, proper dark mode. No core patches, AGPL licensed.">
+<link rel="canonical" href="https://eagle1maledetto.github.io/blueshore/">
+<meta property="og:title" content="Blueshore — modern skins for the Zimbra Classic UI">
+<meta property="og:description" content="Four open source skins (light + dark) for the Zimbra FOSS webmail. SVG icons, bundled typography, real dark mode. No core patches.">
+<meta property="og:image" content="https://eagle1maledetto.github.io/blueshore/screenshots/blueshoretide-mail.png">
+<meta property="og:url" content="https://eagle1maledetto.github.io/blueshore/">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232f63e0'/%3E%3Cpath d='M4 21c3-3 6-3 9 0s6 3 9 0 4-2 6-1v8H4z' fill='%23e8effc'/%3E%3Cpath d='M4 24c3-2.2 6-2.2 9 0s6 2.2 9 0c2-1.4 4-1.6 6-.8V28H4z' fill='%23ffffff' opacity='.7'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:'Public Sans';src:url(fonts/PublicSans-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Public Sans';src:url(fonts/PublicSans-SemiBold.woff2) format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Public Sans';src:url(fonts/PublicSans-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+:root{
+  --bg:#fbfbf9; --surface:#ffffff; --card:#ffffff; --border:#e4e2dc; --border2:#d5d3cc;
+  --text:#191c20; --muted:#5c6470; --faint:#8a9099;
+  --accent:#2f63e0; --accent-hov:#2a58c9; --accent-light:#e8effc; --on-accent:#ffffff;
+  --code-bg:#f3f2ee; --shadow:0 10px 40px rgba(25,28,32,.10);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#11141a; --surface:#161a21; --card:#1a1f27; --border:#242933; --border2:#2e3440;
+  --text:#ffffff; --muted:#bac1cb; --faint:#818996;
+  --accent:#6b96f0; --accent-hov:#7ea4f3; --accent-light:#243048; --on-accent:#111315;
+  --code-bg:#1e232c; --shadow:0 10px 40px rgba(0,0,0,.5);
+  color-scheme:dark;
+}}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font:16px/1.6 'Public Sans',system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+header{padding:72px 0 40px;text-align:center}
+.logo{display:inline-flex;align-items:center;gap:14px;margin-bottom:18px}
+.logo svg{width:52px;height:52px;border-radius:12px}
+h1{font-size:2.6rem;font-weight:700;letter-spacing:-.02em}
+.tagline{font-size:1.22rem;color:var(--muted);max-width:640px;margin:14px auto 0}
+.cta{margin-top:30px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-block;padding:11px 22px;border-radius:8px;font-weight:600;font-size:.98rem}
+.btn-primary{background:var(--accent);color:var(--on-accent)}
+.btn-primary:hover{background:var(--accent-hov);text-decoration:none}
+.btn-ghost{border:1px solid var(--border2);color:var(--text)}
+.btn-ghost:hover{background:var(--accent-light);text-decoration:none}
+.shot{margin:44px auto 0}
+.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{font:inherit;font-size:.92rem;font-weight:600;color:var(--muted);background:none;border:1px solid var(--border);border-radius:999px;padding:7px 16px;cursor:pointer}
+.tabs button.active{color:var(--accent);border-color:var(--accent);background:var(--accent-light)}
+.shot img{width:100%;height:auto;display:block;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow)}
+.shot .views{margin-top:10px;text-align:center;font-size:.9rem;color:var(--faint)}
+section{padding:56px 0}
+h2{font-size:1.55rem;font-weight:700;letter-spacing:-.01em;margin-bottom:26px}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+.feature{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px}
+.feature h3{font-size:1.02rem;font-weight:600;margin-bottom:6px}
+.feature p{font-size:.95rem;color:var(--muted)}
+.variants{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.variant{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.variant .sw{display:flex;gap:6px;margin-bottom:12px}
+.variant .sw i{width:22px;height:22px;border-radius:6px;border:1px solid rgba(128,128,128,.25)}
+.variant h3{font-size:1rem;font-weight:600}
+.variant code{font-size:.85rem;color:var(--muted)}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:12px;padding:20px 22px;overflow-x:auto;font-size:.88rem;line-height:1.7}
+code{font-family:ui-monospace,'Cascadia Code',Menlo,Consolas,monospace}
+.note{margin-top:14px;font-size:.92rem;color:var(--muted)}
+footer{border-top:1px solid var(--border);padding:34px 0 46px;font-size:.9rem;color:var(--faint)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(max-width:640px){h1{font-size:2rem}header{padding:48px 0 28px}}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="logo">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#2f63e0"/><path d="M4 21c3-3 6-3 9 0s6 3 9 0 4-2 6-1v8H4z" fill="#e8effc"/><path d="M4 24c3-2.2 6-2.2 9 0s6 2.2 9 0c2-1.4 4-1.6 6-.8V28H4z" fill="#ffffff" opacity=".7"/></svg>
+    <h1>Blueshore</h1>
+  </div>
+  <p class="tagline">A family of four open source skins for the <strong>Zimbra Classic web client</strong>.
+  Modern, quiet, light and dark — without touching a single core file.</p>
+  <div class="cta">
+    <a class="btn btn-primary" href="https://github.com/eagle1maledetto/blueshore">View on GitHub</a>
+    <a class="btn btn-ghost" href="https://github.com/eagle1maledetto/blueshore/blob/main/INSTALL.md">Install guide</a>
+  </div>
+
+  <div class="shot">
+    <div class="tabs" role="tablist">
+      <button class="active" data-skin="blueshoretide">Tide</button>
+      <button data-skin="blueshoretidedark">Tide dark</button>
+      <button data-skin="blueshoresand">Sand</button>
+      <button data-skin="blueshoresanddark">Sand dark</button>
+    </div>
+    <img id="shot" src="screenshots/blueshoretide-mail.png" width="1440" height="900"
+         alt="Zimbra Classic UI with the Blueshore Tide skin: mail list and reading pane with modern SVG icons and clean typography">
+    <p class="views">Every variant, three views: <a href="https://github.com/eagle1maledetto/blueshore/tree/main/docs/screenshots">mail, calendar and compose screenshots</a></p>
+  </div>
+</header>
+
+<section class="wrap">
+  <h2>What it changes</h2>
+  <div class="features">
+    <div class="feature"><h3>Flat SVG icons</h3><p>Every icon of the Classic UI redrawn with Lucide as inline SVG — folders, toolbar, message status, calendar, dialogs. No legacy sprites, crisp at any zoom.</p></div>
+    <div class="feature"><h3>Bundled typography</h3><p>Public Sans ships inside the skin. Zero external requests, one coherent type scale driven by the user's font-size preference.</p></div>
+    <div class="feature"><h3>Real dark mode</h3><p>Surfaces, calendar grid, native form controls, editor toolbar — all themed. The message body stays a light card, because HTML mail assumes a white background.</p></div>
+    <div class="feature"><h3>No core patches</h3><p>A plain Zimbra skin: drop it in <code>skins/</code>, register it, done. It survives upgrades and users pick it per account in Preferences &rarr; Theme.</p></div>
+    <div class="feature"><h3>Quiet, denser layout</h3><p>Neutral warm surfaces, accent colour only where it means something, compact rows in lists and in the folder tree, unread counts in their own badge.</p></div>
+    <div class="feature"><h3>Make it yours</h3><p>One shared source, colour-only palettes. A custom branded variant is a single <code>.properties</code> file plus the included build script.</p></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Four variants, one source</h2>
+  <div class="variants">
+    <div class="variant"><div class="sw"><i style="background:#fbfbf9"></i><i style="background:#2f63e0"></i><i style="background:#eaf1fd"></i></div><h3>Tide</h3><code>blueshoretide</code></div>
+    <div class="variant"><div class="sw"><i style="background:#161a21"></i><i style="background:#6b96f0"></i><i style="background:#243048"></i></div><h3>Tide dark</h3><code>blueshoretidedark</code></div>
+    <div class="variant"><div class="sw"><i style="background:#faf8f4"></i><i style="background:#c47d16"></i><i style="background:#f6ead3"></i></div><h3>Sand</h3><code>blueshoresand</code></div>
+    <div class="variant"><div class="sw"><i style="background:#1b1e24"></i><i style="background:#f0a53a"></i><i style="background:#2a2f38"></i></div><h3>Sand dark</h3><code>blueshoresanddark</code></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Install</h2>
+  <pre><code>cp -a skins/blueshoretide /opt/zimbra/jetty_base/webapps/zimbra/skins/
+chown -R zimbra:zimbra /opt/zimbra/jetty_base/webapps/zimbra/skins/blueshoretide
+su - zimbra -c 'zmskindeploy /opt/zimbra/jetty_base/webapps/zimbra/skins/blueshoretide'
+su - zimbra -c 'zmprov mc default +zimbraAvailableSkin blueshoretide &amp;&amp; zmprov fc skin'</code></pre>
+  <p class="note">Developed and tested on Zimbra FOSS 10.1.x (Maldua builds), Classic/Advanced client.
+  Full procedure, updates, removal and troubleshooting in the
+  <a href="https://github.com/eagle1maledetto/blueshore/blob/main/INSTALL.md">install guide</a>;
+  palettes and token reference in the
+  <a href="https://github.com/eagle1maledetto/blueshore/blob/main/docs/CUSTOMIZING.md">customisation guide</a>.</p>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>&copy; 2026 Gianluca Zamagni, Parvati Srl &middot; AGPL-3.0-or-later &middot; derived from the Zimbra <em>harmony</em> skin (CPAL/GPLv2)</div>
+    <div>Icons: <a href="https://lucide.dev">Lucide</a> (ISC) &middot; Type: <a href="https://public-sans.digital.gov/">Public Sans</a> (OFL)</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.tabs button').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.tabs button').forEach(function(x){x.classList.remove('active')});
+    b.classList.add('active');
+    var img=document.getElementById('shot');
+    img.src='screenshots/'+b.dataset.skin+'-mail.png';
+    img.alt='Zimbra Classic UI with the Blueshore '+b.textContent+' skin: mail list and reading pane';
+  });
+});
+</script>
+</body>
+</html>
