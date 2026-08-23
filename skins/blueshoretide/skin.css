@@ -1,0 +1,1202 @@
+/*
+ * ***** BEGIN LICENSE BLOCK *****
+ * Zimbra Collaboration Suite Web Client
+ * Copyright (C) 2013, 2014, 2015, 2016 Synacor, Inc.
+ *
+ * The contents of this file are subject to the Common Public Attribution License Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at: https://www.zimbra.com/license
+ * The License is based on the Mozilla Public License Version 1.1 but Sections 14 and 15
+ * have been added to cover use of software over a computer network and provide for limited attribution
+ * for the Original Developer. In addition, Exhibit A has been modified to be consistent with Exhibit B.
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * See the License for the specific language governing rights and limitations under the License.
+ * The Original Code is Zimbra Open Source Web Client.
+ * The Initial Developer of the Original Code is Zimbra, Inc.  All rights to the Original Code were
+ * transferred by Zimbra, Inc. to Synacor, Inc. on September 14, 2015.
+ *
+ * All portions of the code are Copyright (C) 2013, 2014, 2015, 2016 Synacor, Inc. All Rights Reserved.
+ * ***** END LICENSE BLOCK *****
+ */
+
+/* Public Sans, bundled with the skin (SIL OFL 1.1, see fonts/LICENSE-PublicSans.md) */
+
+@font-face {
+	font-family:"Public Sans";
+	src:url(@AppContextPath@/skins/@SkinName@/fonts/PublicSans-Regular.woff2?v=@jsVersion@) format("woff2");
+	font-weight:400;
+	font-style:normal;
+	font-display:swap;
+}
+
+@font-face {
+	font-family:"Public Sans";
+	src:url(@AppContextPath@/skins/@SkinName@/fonts/PublicSans-Medium.woff2?v=@jsVersion@) format("woff2");
+	font-weight:500;
+	font-style:normal;
+	font-display:swap;
+}
+
+@font-face {
+	font-family:"Public Sans";
+	src:url(@AppContextPath@/skins/@SkinName@/fonts/PublicSans-SemiBold.woff2?v=@jsVersion@) format("woff2");
+	font-weight:600;
+	font-style:normal;
+	font-display:swap;
+}
+
+@font-face {
+	font-family:"Public Sans";
+	src:url(@AppContextPath@/skins/@SkinName@/fonts/PublicSans-Bold.woff2?v=@jsVersion@) format("woff2");
+	font-weight:700;
+	font-style:normal;
+	font-display:swap;
+}
+
+/* Native form controls and scrollbars follow the skin: accent colour on
+   checkboxes/radios, dark colour-scheme in dark variants */
+HTML {
+	color-scheme:@ColorScheme@;
+}
+
+INPUT[type="checkbox"],
+INPUT[type="radio"] {
+	accent-color:@AccentC@;
+}
+
+/* Default text colour: the core styles widgets one by one and leaves the
+   document default (black) for everything else — calendar day numbers, nav
+   titles, empty-state texts... unreadable on dark surfaces */
+BODY {
+	color:@TxtC@;
+}
+
+/* Text inputs: the core sets their text colour (InputColor) but no background
+   (ZFieldBg-normal is empty), so the browser default white stays — white on
+   white in dark variants. Address/attachment bubble containers are 'white'
+   literals in the core. */
+INPUT[type="text"],
+INPUT[type="password"],
+INPUT:not([type]),
+TEXTAREA,
+.addrBubbleContainer,
+.attBubbleContainer {
+	background-color:@SurfaceC@;
+	color:@TxtC@;
+}
+
+/* Login page styling */
+
+.form .ZLoginButton {
+	background-color:@AltC@;
+	border-color:@OnAccentC@;
+	color:@OnAccentC@;
+}
+
+.form .ZLoginButton:hover {
+	background-color:@lighten(AltC,25)@;
+	color:@TxtC@;
+}
+
+.form .ZLoginButton:active {
+	background-color:@darken(AltC,25)@;
+}
+
+#skin_spacing_tree {
+	padding-bottom: 0px;
+}
+
+/* App tab styling */
+
+#skin_spacing_app_row {
+	height:2.4rem;
+}
+
+.ZAppTabBorder .ZWidgetTitle {
+	font-size:13px;
+	font-size:1.04rem;
+}
+
+/* Major panel styling */
+
+.ZmOverview .overviewHeader-Text.FakeAnchor > DIV {
+	margin-right:2px;
+}
+
+#skin_spacing_tree,
+#skin_spacing_tree_footer {
+	border-width:0px;
+	margin-left:3px;
+}
+
+.ZmConvView,
+.ZmConvView2,
+.ZmMailMsgView {
+	background-color:@AppC@;
+}
+
+.ZmMailMsgView>DIV {
+	background-color:@ReadPaneC@;
+}
+
+/* Message body as a "card": in light variants it matches the surface, in
+   dark ones it is white on a dark ground (margin/radius in the MsgCard token) */
+.MsgBody,
+.ZmMailMsgView > .MsgBody {  /* in message view the body is a direct child: beats .ZmMailMsgView>DIV */
+	background-color:@MsgBodyBgC@;
+	color:@MsgBodyTextC@;
+	overflow:hidden;  /* the HTML-mail iframe is rectangular: clip it to the card corners */
+	@MsgCard@
+}
+
+#skin_container_tree,
+.Conv2View,
+.Conv2View-bottom {
+	background-color:transparent;
+	background-image:none;
+}
+
+.NoResults {
+	background-color:transparent;
+	padding:1.5em 1em;
+	color:@TextFaintC@;
+	vertical-align:middle;
+	text-align:center;
+	@roundCorners(3px)@
+}
+
+/* Empty state vertically centred in the pane; :has() is supported by
+   current browsers, on older ones it simply stays at the top */
+TABLE:has(>TBODY>TR>TD.NoResults) {
+	height:100%;
+	width:100%;
+}
+
+
+/* Left nav tree styling */
+
+.overviewHeader {
+	background-color:transparent;
+	padding-top:0px;
+	padding-bottom:0px;
+}
+
+.overviewHeader>TABLE {
+	border-color:transparent;
+}
+
+.overviewHeader-selected > TABLE {
+	border-color: @SelC@;
+}
+
+.overviewHeader-selected-focused > TABLE {
+	@FocusBorder@
+}
+
+.overviewHeader {
+	padding-top:6px;  /* compact density (was 10px) */
+	padding-bottom:2px;
+	padding-left:8px;
+}
+
+#skin_container_logo {
+	padding-left:14px;
+	box-sizing:border-box;
+}
+
+.overviewHeader.FirstOverviewHeader {
+	padding-top:4px;
+}
+
+.overviewHeader TD {
+	background-color:transparent;
+	font-size:10.5px;
+	font-size:0.84rem;
+	font-weight:700;
+	color:@TextHeadC@;
+}
+
+.overviewHeader .overviewHeader-Text {
+	text-transform:uppercase;
+	letter-spacing:0.08em;
+}
+
+/* Left nav tree items */
+
+.DwtTreeItem {
+	border-radius:7px;
+}
+
+.DwtTreeItem-selected TD,
+.DwtTreeItem-selected SPAN {
+	color:@AccentTextC@;
+}
+
+/* Unread/item counters split from the label by blueshore.js: number
+   right-aligned in accent (24px inset: the folder action arrow lives at
+   the row edge on hover/selection and must stay reachable) */
+
+.DwtTreeItem {
+	position:relative;
+}
+
+[data-bs-unread] {
+	position:absolute;
+	right:24px;
+	top:50%;
+	transform:translateY(-50%);
+	color:@AccentTextC@;
+	font-weight:600;
+}
+
+.bs-has-unread [class*="DwtTreeItem-Text"] {
+	padding-right:44px;
+}
+
+.bs-has-unread [class*="DwtTreeItem-Text"]>SPAN {
+	/* ellipsize within the space reserved for the count; the absolutely
+	   positioned badge is not clipped: its containing block is the .DwtTreeItem */
+	display:inline-block;
+	max-width:100%;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	vertical-align:middle;
+}
+
+.DwtTreeItem-selected .DwtTreeItem-Text SPAN,
+.DwtTreeItem-selected .DwtTreeItem-Text-focused SPAN {
+	font-weight:600;
+}
+
+/* Mini calendar */
+
+.DwtCalendarTitlebar {
+	font-weight:600;
+}
+
+.DwtCalendarDay {
+	border-radius:5px;
+}
+
+.DwtCalendarDay-today {
+	background-color:@AccentC@;
+	color:@OnAccentC@;
+}
+
+.DwtCalendarDay-selected:not(.DwtCalendarDay-today) {
+	background-color:@SelC@;
+	color:@AccentTextC@;
+}
+
+/* New button styling */
+
+.ZNewButton {
+	border-radius:7px;
+	box-shadow:0px 1px 2px @AccentShadowC@;
+	margin-right:0px;
+	overflow:hidden !important;
+	left:6px;
+	right:6px;
+	height:28px;  /* must fit the 25px toolbar band + tree gap (JS layout) */
+	box-sizing:border-box;
+}
+
+.ZNewButton .ZToolbarButtonTable {
+	width:100%;
+	height:100%;
+}
+
+/* .ZToolbarButton.ZNewButton: same specificity as the generic toolbar rule
+   (which comes later in the file) — the double class makes this one win */
+.ZToolbarButton.ZNewButton .ZWidgetTitle {
+	font-size:13px;
+	font-size:1.04rem;
+	font-weight:600;
+	text-align:center;
+	padding-left:17px;  /* offsets the dropdown arrow width: optical centre on the whole button */
+}
+
+.ZNewButton .ZToolbarButtonBorder {
+	background-color:@AccentC@;
+	border-color:@AccentC@;
+}
+
+.ZNewButton.ZFocused .ZToolbarButtonBorder,
+.ZNewButton.ZHover .ZToolbarButtonBorder {
+	background-color:@AccentHov@;
+	border-color:@AccentHov@;
+}
+
+.ZNewButton.ZActive .ZToolbarButtonBorder {
+	background-color:@AccentAct@;
+	border-color:@AccentAct@;
+	background-image:none;
+}
+
+.ZNewButton .ZToolbarButtonTable .ZLeftIcon {
+	display:none;
+}
+
+.ZNewButton .ZToolbarButtonTable .ZWidgetTitle,
+.ZNewButton.ZHover .ZToolbarButtonTable .ZWidgetTitle {
+	color:@OnAccentC@;
+}
+
+/* Top bar */
+
+#skin_spacing_top_row .skin_table>TBODY>TR:first-child>TD {
+	height:48px;
+	height:3.84rem;  /* compact density; the original pair (4.4rem) rendered 55px */
+}
+
+/* Search pill, centered over the top bar (the td gives up its slot and the
+   container is re-anchored; the toolbar widget follows its container) */
+
+#skin_spacing_search {
+	width:1px;
+}
+
+#skin_container_search {
+	position:absolute;
+	left:50%;
+	top:9px;
+	/* centred with a margin, NOT a transform: Zimbra's popup positioner
+	   ignores transforms and menus would open in the wrong place */
+	width:clamp(360px, 34vw, 520px);
+	margin-left:calc(clamp(360px, 34vw, 520px) / -2);
+	z-index:1;
+}
+
+.ZmSearchToolbar {
+	width:100%;
+	height:32px;
+	height:2.9rem;
+}
+
+.ZmSearchToolbar .ZToolbarTable {
+	height:100%;
+	width:100%;
+}
+
+.ZmSearchToolbar .ZToolbarTable TD:first-child {
+	padding-left:8px;
+}
+
+.ZmSearchToolbar .ZToolbarTable TD:last-child {
+	padding-right:8px;
+}
+
+#ztb_search_item_8 {
+	width:100%;
+}
+
+.ZmSearchToolbar input {
+	background-color:transparent;
+	border:none !important;  /* the focus ring lives on the pill, not the input */
+	outline:none;
+	font-size:13px;
+	font-size:1.04rem;
+	width:100% !important;  /* the widget sets an inline width on the input */
+	box-sizing:border-box;
+}
+
+.ZmSearchToolbar:focus-within {
+	box-shadow:0px 0px 0px 1.5px @AccentTintC@;
+}
+
+/* No inner focus box inside the pill (the pill's own ring signals focus);
+   the focused state lives on the DwtInputField wrapper and on the input,
+   whose class switches to search_input-expanded on focus */
+.ZmSearchToolbar [class*="DwtInputField"] {
+	background-color:transparent;
+	border:none;
+}
+
+.ZmSearchToolbar .search_input-expanded {
+	background-color:transparent !important;  /* state applied by the JS */
+	outline:none !important;
+}
+
+/* "Bubble" fields (active query, Search in:, To:/Cc: in compose):
+   rounded like the rest of the style; inside the top bar pill the shape
+   comes from the pill itself, so no border of their own */
+
+.addrBubbleContainer {
+	border:1px solid @BtnBorderC@;
+	border-radius:8px;
+	padding:2px 8px;
+}
+
+.addrBubbleContainer.ZFocused {
+	border-color:@AccentTintC@;
+}
+
+#ztb_search .addrBubbleContainer,
+#ztb_search .addrBubbleContainer.ZFocused {
+	border:none;
+	background-color:transparent;
+}
+
+/* App tabs: text only, active tab gets accent underline */
+
+#skin_spacing_app_row {
+	height:36px;  /* compact density; the original pair rendered 43px */
+	height:2.88rem;
+	border-bottom:1px solid @BorderC@;
+}
+
+.ZmAppChooser {
+	padding-left:10px;
+}
+
+#ztb_appChooser_items>TD {
+	padding-right:14px;
+}
+
+.ZmAppChooser .ZAppTab {
+	padding-bottom:8px;
+}
+
+.ZmAppChooser .ZAppTab {
+	background-color:transparent;
+}
+
+.ZmAppChooser .ZAppTab .ZLeftIcon {
+	display:none;
+}
+
+.ZmAppChooser .ZAppTab .ZWidgetTitle {
+	font-size:13px;
+	font-size:1.04rem;
+	font-weight:500;
+}
+
+.ZmAppChooser .ZAppTab.ZSelected {
+	border-bottom:2px solid @AccentC@;
+}
+
+.ZmAppChooser .ZAppTab.ZSelected .ZWidgetTitle {
+	font-weight:600;
+}
+
+/* Msg view styling */
+
+.ZmMailMsgCapsuleView {
+	background-color:@ReadPaneC@;
+	border-color:@RowBorderC@;
+	border-width:0px 0px 1px;
+	@roundCorners(0)@
+}
+
+.Conv2MsgHeader .date {
+	background-color:transparent;
+}
+
+.ZmMailMsgCapsuleView .separator {
+	border-color:transparent;
+}
+
+/* Conv view styling */
+
+.Conv2Messages {
+	padding:0.25em 0.5em;
+}
+
+.Conv2Messages .Last {
+	border-color:transparent;
+	@roundCorners(3px)@
+}
+
+.Conv2Header,
+.Conv2Header .info{
+	background-color:@darken(AppC,5)@;
+	border-bottom-width:0px;
+}
+
+.Conv2Header {
+	height:2.2em;
+}
+
+.Conv2Header .subject,
+.Conv2Header .info {
+	color:@TxtC@;
+}
+
+.Conv2MsgHeader .image {
+	@roundCorners(24px)@
+}
+
+.Collapsed .Conv2MsgHeader .image {
+	@roundCorners(16px)@
+}
+
+/* Table header styling */
+
+.DwtListView-Sash:first-child DIV {
+	background-color:@BorderC@ !important;
+}
+
+TD.DwtListView-Column  {
+	background-color:@SurfaceC@;
+	border-bottom-width:0px;
+	color:@TextMidC@;
+	font-weight:500;
+}
+
+TD.DwtListView-ColumnActive  {
+	background-color:@SurfaceC@;
+	color:@TextMidC@;
+	font-weight:600;
+}
+
+.DwtListView-Rows-Empty > * {
+	@TransparentBorder@
+}
+
+.DwtListView-Rows-Empty:focus {
+	outline: none;
+}
+
+.DwtListView-Rows-Empty:focus > * {
+	@FocusBorder@
+}
+
+.console_inset_app_l {
+	z-index:499 !important;  /* 1 less than veil */
+}
+
+/* Row styling */
+
+.Row {
+	height:20px;
+	height:2rem;
+	padding-top:4px;
+}
+
+.ZmContactSplitView,
+.ZmContactSimpleView,
+.ZmContactInfoView,
+.SimpleContact {
+	background-color:transparent;
+	border-color:transparent;
+}
+
+.ZmContactInfoView .headerRow {
+	background-color:transparent;
+	border-color:transparent;
+	margin: .25em 0px;
+	@roundCorners(3px)@
+}
+
+/* Double-row styling*/
+
+.RowDouble {
+	padding:2px 10px;
+	border-bottom:1px solid @RowBorderC@;
+}
+
+.RowDouble .TopRow {
+	position:relative; /* global? */
+}
+
+/* List header (sort label, item count): the core derives a dark colour
+   from AppC, unreadable on dark surfaces */
+.DwtListView-Column TD.DwtListHeaderItem-label,
+.DwtListView-Column .DwtListHeaderItem-label,
+.DwtListView-Column .itemCountText {  /* must beat the core .DwtListView-Column td */
+	color:@TextFaintC@;
+}
+
+/* Message list rows: states per design */
+
+.Row-selected {
+	box-shadow:inset 3px 0px 0px @AccentC@;
+}
+
+.ZmRowDoubleHeader SPAN {
+	color:@TextMidC@;
+}
+
+/* Row 1 (sender/name) one step above the body size, per the type scale.
+   Must go on the SPANs: the core reset (div{font-size:1rem}) zeroes the
+   intermediate divs inside TopRow, but rem resolves on the root, not the parent */
+.ZmRowDoubleHeader .TopRow SPAN {
+	font-size:13.5px;
+	font-size:1.08rem;
+}
+
+.ZmRowDoubleHeader .TopRow SPAN.ZmConvListNumMsgs {
+	font-size:12.5px;
+	font-size:1rem;
+}
+
+.ZmRowDoubleHeader.Unread {
+	font-weight:400;
+}
+
+.ZmRowDoubleHeader.Unread .TopRow SPAN {
+	color:@TxtC@;
+	font-weight:600;
+}
+
+.ZmRowDoubleHeader.Unread .SubjectDoubleRow {
+	/* the core sets bold on the container: the truncation ellipsis is drawn
+	   by the container, not the spans — without this the "…" renders bold */
+	color:@TextFaintC@;
+	font-weight:400;
+}
+
+.ZmRowDoubleHeader.Unread .SubjectDoubleRow SPAN {
+	color:@TextMidC@;
+	font-weight:400;
+}
+
+/* design choice: semibold subject on unread rows for at-a-glance
+   scanning; the preview stays light */
+.ZmRowDoubleHeader.Unread .SubjectDoubleRow SPAN:first-child {
+	color:@TxtC@;
+	font-weight:600;
+}
+
+.ZmRowDoubleHeader .SubjectDoubleRow SPAN {
+	color:@TextFaintC@;
+}
+
+.ZmConvListFragment {
+	color:@TextFaintC@ !important;
+	font-weight:400;
+}
+
+.ZmConvListNumMsgs {
+	background-color:@AccentLightC@;
+	color:@AccentTextC@;
+	font-size:12.5px;  /* does not follow the 13.5px of TopRow: stays at UI body size */
+	font-size:1rem;
+	font-weight:600;
+	padding:0px 5px;
+	border-radius:8px;
+}
+
+.Unread .ZmConvListNumMsgs,
+.ZmRowDoubleHeader.Unread .TopRow SPAN.ZmConvListNumMsgs {
+	background-color:@AccentC@;
+	color:@OnAccentC@;
+	font-weight:600;
+}
+
+.ZmMsgListDate {
+	background-color:transparent;
+	color:@TextFaintC@;
+	font-size:11.5px;
+	font-size:0.92rem;
+	font-weight:400;
+}
+
+.ZmRowDoubleHeader.Unread .TopRow .ZmMsgListDate {
+	color:@AccentTextC@;
+	font-weight:500;
+}
+
+.ZmListFlagsWrapper {
+	background-color:transparent;
+}
+
+/* Row density: stock Classic sits at ~54px, target 52-56; the core
+   margins (6/4/6) on two 1.6rem rows rendered 61 */
+.RowDouble .TopRow {
+	margin-top:4px;
+}
+
+.RowDouble .BottomRow {
+	margin:3px 0px 4px;
+}
+
+.RowDouble .TopRow,
+.RowDouble .BottomRow {
+	height:18px;
+	height:1.5rem;
+}
+
+/* Reserve room for the absolutely-positioned date and flag/attachment icons,
+   so the text ellipsizes instead of running underneath them */
+
+.RowDouble .TopRow {
+	padding-right:50px;
+	box-sizing:border-box;
+}
+
+.RowDouble .BottomRow {
+	padding-right:56px;
+	box-sizing:border-box;
+}
+
+.RowDouble .TopRow>DIV {
+	max-width:calc(100% - 40px);  /* the div starts past the dot/expand icons */
+	text-overflow:ellipsis;
+}
+
+.RowDouble .SubjectDoubleRow {
+	max-width:calc(100% - 30px);  /* the div starts past its left margin */
+	text-overflow:ellipsis;
+}
+
+/* Row-2 status cell (message rows: expanded conversations, message view).
+   The read/unread glyph is redundant with the row-1 dot and stays hidden,
+   but replied/forwarded/sent/draft must show (design choice).
+   The cell keeps a fixed 23px width so the subject stays aligned with the
+   conversation rows, whose subject container carries the same class with
+   the core 23px margin: never hide that one. */
+.RowDouble .BottomRow .ZmMsgListBottomRowIcon:not(.SubjectDoubleRow) {
+	display:inline-block !important;  /* JS sets display inline on this element */
+	width:23px;
+	margin:0px;
+	vertical-align:top;
+	text-align:center;
+}
+
+.ZmMsgListBottomRowIcon > .ImgMsgStatusRead,
+.ZmMsgListBottomRowIcon > .ImgMsgStatusUnread,
+.ZmMsgListBottomRowIcon > .ImgMsgStatus {
+	visibility:hidden;
+}
+
+.RowDouble .BottomRow .SubjectDoubleRow:not(.ZmMsgListBottomRowIcon) {
+	margin-left:22px;
+}
+
+.RowDouble .BottomRow .ZmMsgListBottomRowIcon:not(.SubjectDoubleRow) + .SubjectDoubleRow {
+	margin-left:0px;
+}
+
+
+.ZmComposeView INPUT,
+.ZmComposeView TEXTAREA {
+	border:none;
+	outline:none;
+}
+
+/* Contact styling */
+.ZmContactSplitView,
+.ZmContactSimpleView,
+.ZmContactInfoView .headerRow,
+.ZmContactView .headerRow {
+	background-color:transparent;
+	border-color:transparent;
+}
+
+.ZmContactInfoView {
+	background-color:@SurfaceC@;
+	border-width:0px;
+	padding:1em 1em 0;
+}
+
+.ZmContactInfoView .headerRow {
+	margin-bottom:.5em;
+	padding-top:.25em;
+}
+
+.ZmContactInfoView .contactGroupTable {
+	border-collapse:separate;
+	border-color:@darken(AppC,10)@;
+	@roundCorners(3px)@
+}
+
+.ZmContactView {
+	background-color:transparent;
+}
+
+.ZmEditGroupContact {
+	background-color:@SurfaceC@;
+	border:1px solid @darken(AppC,25)@;
+}
+
+.SimpleContact {
+	background-color:transparent;
+	background-image:none;
+	height:22px;
+	height:2.2rem;
+}
+.SimpleContact>DIV {
+	background-color:transparent;
+	border-color:transparent;
+}
+
+.SimpleContact .ZmListFlagsWrapper {
+	height:16px;
+	margin-top:2px;
+}
+
+.ZmEditGroupContact .Row {
+	margin-bottom:.5em;
+}
+
+.groupMembers .ZmEditGroupContact .Row {
+	background-color:@SurfaceC@;
+	border-color:@AppC@;
+	margin:.5em;
+}
+
+.ZmContactView .contactHeaderSubTable,
+.ZmContactInfoView .contactHeaderSubTable {
+	background-color:@HoverC@;
+	border-color:transparent;
+}
+
+/* Contacts alphabet bar: the core paints black text and light gradients */
+
+.AlphabetBarCell {
+	background-color:@SurfaceC@;
+	color:@TextMidC@;
+	border-color:@BtnBorderC@;
+}
+
+.AlphabetBarTable .AlphabetBarCell.DwtButton-active,
+.AlphabetBarTable .AlphabetBarCell:hover {
+	background-color:@SelC@;
+	color:@AccentTextC@;
+	border-color:@BtnBorderC@;
+}
+
+/* Plain <hr> separators (preferences pages) follow the design borders */
+
+HR {
+	border-color:@BorderC@;
+}
+
+/* Calendar chrome: core literals unreadable on dark */
+
+.calendar_date_search-dateRange {
+	color:@TextMidC@;
+}
+
+.ZTreeItemCheckbox {
+	background-color:@SurfaceC@;
+	border:1px solid @BtnBorderC@;
+	box-sizing:border-box;
+}
+
+/* Appointment chips keep the calendar colour as an inline light gradient
+   on their TABLE (JS): their text must stay dark like text on a light card,
+   whatever BODY inherits in dark variants */
+.appt_body TABLE,
+.appt_allday_body TABLE,
+.calendar_month_day_table TABLE {
+	color:@MsgBodyTextC@;
+}
+
+/* Appointment scheduler grid: core literals (white / #e3e3dc) */
+.ZmSchedulerNameTd,
+.ZmScheduler-working {
+	background-color:@SurfaceC@;
+	color:@TxtC@;
+}
+
+.ZmScheduler-free {
+	background-color:@HoverC@;
+}
+
+/* TinyMCE toolbar labels (font/size/format) are #595959 in its own skin css,
+   which loads after ours: higher specificity needed */
+.mce-container .mce-btn .mce-txt,
+.mce-container .mce-menubtn .mce-txt {
+	color:@TextMidC@;
+}
+
+/* Calendar appt styling */
+
+.ImgCalendarDayGrid {
+	background-color:@AppC@ !important;  /* JS sets the off-hours color inline */
+}
+
+
+.ZmCalViewMgr,
+.calendar_view {
+	background-color:transparent;
+}
+
+.appt_body,
+.appt_30_body,
+.appt_allday_body {
+	background-color:@SurfaceC@;
+	border-color:transparent;
+	box-shadow:0px 0px 0px transparent;
+}
+.appt_body>TABLE,
+.appt_30_body>TABLE,
+.appt_allday_body>TABLE {
+	background-color:transparent;
+	background-image:none;
+	border-color:transparent;
+}
+
+.ZmApptComposeField .FakeAnchor {       /* global? */
+	float:right;
+	max-width:22em;
+}
+
+.ZmScheduleAssistantView {
+	background-color:@SurfaceC@;
+}
+
+.InvResponseBar {
+	background-color:@darken(AppC,10)@;
+	border-top-color:@darken(AppC,20)@;
+}
+
+.InvResponseBar .ZButtonBorder{
+	background-color:@AppC@;
+}
+
+/* Task styling */
+
+.ZmTaskMultiView .DwtListView-Column {
+	background-color:transparent;
+	border-color:transparent;
+}
+
+.ZmTaskMultiView .ZmMailMsgView {
+	background-color:@SurfaceC@;
+}
+
+.newTaskBannerSep {
+	background-color:transparent;
+	border-bottom-width:0px;
+	margin-bottom:1em;
+}
+
+.newTaskBannerSep>TBODY>TR>TD {
+	background-color:@darken(AppC,10)@;
+	padding:0.5em;
+}
+
+.ZmTaskEditView .miniCalendarButton .ZButtonBorder,
+.ZmTaskEditView .miniTimeButton .ZButtonBorder,
+.ZmTaskEditView .ZmCompletionSelector .ZButtonBorder {
+	margin-top:0px;
+}
+
+#skin_dropMenu *:focus,
+#skin_userAndQuota *:focus {
+	outline-color: @AppC@;
+}
+
+/* Briefcase styling */
+
+/* Document preview: the iframe is transparent and the served document has
+   black text — give it the same white card as the message body. The JS
+   sizes the iframe on the container: keep it at 100% so the card box can
+   carry padding without clipping the document. */
+.PreviewViewBody {
+	box-sizing:border-box;
+	@PreviewCardBox@
+}
+
+.PreviewFrame {
+	background-color:@MsgBodyBgC@;
+	overflow:hidden;
+	@PreviewCard@
+}
+
+.PreviewFrame > IFRAME {
+	width:100% !important;
+	height:100% !important;
+	border:0px;
+}
+
+.ZmBriefcaseDetailListView {
+	background-color:transparent;
+}
+
+.ZmPreviewView .MsgHeaderTable>TBODY>TR>TD {
+	background-color:transparent !important;
+}
+
+.ZmPreviewView .PreviewViewHeader {
+	margin:0em 1em;
+}
+
+.ZmBriefcaseDetailListView .Row TABLE {
+	border-collapse:separate;
+	margin:.25em 0em;
+}
+
+/* Doc editor styling */
+
+.ZmDocsEditView {
+	background-color:@AppC@;
+}
+
+.ZmDocsEditViewHeaderCell>DIV {
+	margin:5px 3px 0px;
+}
+
+/* Preferences styling */
+
+.ZmPrefView {
+	background-color:@AppC@;
+}
+
+.ZOptionsSectionMain {
+	background-color:@SurfaceC@;
+	@roundCorners(0 0 3px 3px)@
+}
+
+.ZOptionsSectionTabView .ZTabBorder {
+	background-color:transparent;
+	border-color:transparent transparent @BorderC@;
+}
+
+.ZOptionsSectionTabView .ZSelected .ZTabBorder {
+	border-color:transparent transparent @AccentC@;
+}
+
+.prefHeader {
+	background-color:@AccentLightC@;
+	color:@TxtC@;
+	font-weight:600;
+	@roundCorners(7px 7px 0px 0px)@
+}
+
+.ZmPrefZimletListView .Row {
+	height:auto;
+}
+
+.ZmWhiteBlackList {
+	border:1px solid @darken(AppC,25)@;
+	margin-left:0px;
+	@roundCorners(0)@
+}
+
+.ZmFilterRulesView .ZOptionsSectionMain {
+	background-color:@AppC@;
+	@roundCorners(0)@
+}
+
+.ZmFilterRulesView .DwtChooserListView {
+	background-color:@SurfaceC@;
+	min-height:160px;
+}
+
+/* Rounded text inputs across the app (~6px) */
+
+INPUT[type="text"],
+INPUT[type="password"],
+TEXTAREA,
+.DwtInputField {
+	border-radius:6px;
+}
+
+/* Dialog styling */
+
+.ChooserDialog .overview {
+	border:1px solid @BtnBorderC@;
+	@roundCorners(7px)@
+}
+
+.ZmOverviewLocalHeader,
+.ZmOverviewLocalHeader-actioned,
+.ZmOverviewLocalHeader-selected,
+.ZmOverviewLocalHeader-selected-focused {
+	background-color:transparent;
+	border-top:none;
+	border-bottom:1px solid @BorderC@;
+}
+
+
+/*
+.WindowOuterContainer {
+	background-color:@AppC@;
+}
+*/
+
+.WindowInnerContainer {
+	background-color:@AppC@;
+	border-top:none;
+}
+
+.ZmReminderDialog .DwtToolbarButton {
+	border:none;
+}
+
+/* Plain Text Compose */
+
+.ZmHtmlEditor .ZmHtmlEditorTextArea {
+	border:1px solid @darken(AppC,25)@;
+	padding:0.25em;
+}
+
+/* Mini-cal */
+
+.DwtCalendar {
+	border-top:1px solid @BorderC@;
+}
+
+.DwtMenu .DwtCalendar {
+	border-top-width:0px;
+}
+
+/* Chooser styling */
+
+.ZmContactPicker .DwtChooserListView {
+	background-color:@SurfaceC@;
+	border-color:@darken(AppC,25)@;
+}
+
+.BriefcaseTabBox {
+	border-color:@darken(AppC,25)@;
+	border-style:solid; @roundCorners(0px)@
+}
+
+/* Preferences signature list: 'white' literal in the core */
+.ZmSignatureListView {
+	background-color:@SurfaceC@;
+}
+
+/* Labels */
+
+.ZmContactSplitView .rowLabel,
+.ZmMailMsgView .LabelColName,
+.ZmMailMsgCapsuleView .LabelColName {
+	color:@TextFaintC@;
+	font-weight:normal;
+}
+
+/* Action toolbar buttons */
+
+.ZToolbarButton .ZWidgetTitle {
+	font-size:12.5px;
+	font-size:1rem;
+}
+
+/* Light warning banners ("display images", quota, rename warning) keep the
+   core yellow: they are light cards, so text and links must stay dark
+   whatever TxtC is */
+.DisplayImages,
+.BannerBar .quotaWarning,
+.ZmPageEditView .RenameWarning,
+.DisplayImages A,
+.DisplayImages .FakeAnchor,
+.DisplayImages SPAN {
+	color:@MsgBodyTextC@;
+}
+
+.DisplayImages A,
+.DisplayImages .FakeAnchor {
+	text-decoration:underline;
+}
+
+/* Message header */
+
+.ZmMailMsgView>DIV:first-child {
+	border-bottom:1px solid @SepLightC@;
+}
+
+.addrBubble {
+	background-color:@AccentLightC@;
+	border:none;
+	border-radius:5px;
+	color:@TxtC@;
+}
