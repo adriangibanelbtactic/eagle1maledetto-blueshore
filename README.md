@@ -151,11 +151,13 @@ Blueshore is a derivative of the `harmony` skin shipped with Zimbra
 Collaboration Suite. Files derived from Zimbra keep their original licence
 and headers (CPAL 1.0 for `manifest.xml` and `skin.css`, GPLv2 for
 `skin.properties`). The original Blueshore code (`blueshore.js`, `tools/`,
-`palettes/`, generated files, documentation), Copyright (C) 2026 Gianluca
-Zamagni, Parvati Srl, is released under the
+generated files, documentation), Copyright (C) 2026 Gianluca Zamagni,
+Parvati Srl, is released under the
 **GNU Affero General Public License v3.0 or later**: use it freely, also
 commercially and in hosted services, but if you modify it and let users
 interact with the result over a network you must offer them your modified
-source. Icons are from Lucide (ISC), the typeface is Public Sans (SIL OFL
-1.1). Full text in [LICENSE](LICENSE), file-by-file overview in
-[NOTICE.md](NOTICE.md).
+source. The colour palettes in `palettes/` are GPL-2.0-or-later, so that
+their values can be merged into Zimbra's GPLv2 `skin.properties`. Icons are
+from Lucide (ISC), the typeface is Public Sans (SIL OFL 1.1). Full text in
+[LICENSE](LICENSE), file-by-file overview, modifications to the Zimbra files
+and how the licences fit together in [NOTICE.md](NOTICE.md).
