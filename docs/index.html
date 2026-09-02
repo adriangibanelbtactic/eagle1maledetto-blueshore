@@ -123,12 +123,17 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
 <section class="wrap">
   <h2>Install</h2>
-  <pre><code>cp -a skins/blueshoretide /opt/zimbra/jetty_base/webapps/zimbra/skins/
-chown -R zimbra:zimbra /opt/zimbra/jetty_base/webapps/zimbra/skins/blueshoretide
-su - zimbra -c 'zmskindeploy /opt/zimbra/jetty_base/webapps/zimbra/skins/blueshoretide'
-su - zimbra -c 'zmprov mc default +zimbraAvailableSkin blueshoretide &amp;&amp; zmprov fc skin'</code></pre>
+  <pre><code>VER=1.0.0
+SKIN=blueshoretide
+curl -fLO https://github.com/eagle1maledetto/blueshore/releases/download/v$VER/$SKIN-$VER.tar.gz
+tar -xzf $SKIN-$VER.tar.gz -C /opt/zimbra/jetty_base/webapps/zimbra/skins/
+chown -R zimbra:zimbra /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN
+su - zimbra -c "zmskindeploy /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN"
+su - zimbra -c "zmprov mc default +zimbraAvailableSkin $SKIN &amp;&amp; zmprov fc skin"</code></pre>
   <p class="note">Developed and tested on Zimbra FOSS 10.1.x (Maldua builds), Classic/Advanced client.
-  Full procedure, updates, removal and troubleshooting in the
+  Prebuilt skins, one tarball per variant, are on the
+  <a href="https://github.com/eagle1maledetto/blueshore/releases">releases page</a>;
+  full procedure, updates, removal and troubleshooting in the
   <a href="https://github.com/eagle1maledetto/blueshore/blob/main/INSTALL.md">install guide</a>;
   palettes and token reference in the
   <a href="https://github.com/eagle1maledetto/blueshore/blob/main/docs/CUSTOMIZING.md">customisation guide</a>.</p>

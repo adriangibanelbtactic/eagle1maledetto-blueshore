@@ -7,19 +7,35 @@ you are installing: `blueshoretide`, `blueshoretidedark`, `blueshoresand` or
 Paths below are the defaults of a Zimbra 10 installation
 (`/opt/zimbra/jetty_base/webapps/zimbra/skins`).
 
-## 1. Copy the skin into place (as root)
+## 1. Get the skin
+
+Prebuilt skins are attached to every release on
+<https://github.com/eagle1maledetto/blueshore/releases>: one tarball per
+variant, `<SKIN>-<version>.tar.gz`, which unpacks to a `<SKIN>/` directory.
+
+```sh
+VER=1.0.0
+SKIN=blueshoretide
+curl -fLO https://github.com/eagle1maledetto/blueshore/releases/download/v$VER/$SKIN-$VER.tar.gz
+```
+
+Alternatively build from a source checkout (`python3 tools/build.py --all`,
+see *How to build* in the [README](README.md)): the result is the same
+directory, under `skins/$SKIN`.
+
+## 2. Copy the skin into place (as root)
 
 Zimbra 10 hardens the webapp directories: they are read-only for the `zimbra`
 user, so `zmskindeploy` cannot copy a skin from `/tmp` by itself. Put the
 directory in place as root first, then hand it to `zimbra`:
 
 ```sh
-SKIN=blueshoretide
-cp -a skins/$SKIN /opt/zimbra/jetty_base/webapps/zimbra/skins/
+tar -xzf $SKIN-$VER.tar.gz -C /opt/zimbra/jetty_base/webapps/zimbra/skins/
+# from a source checkout: cp -a skins/$SKIN /opt/zimbra/jetty_base/webapps/zimbra/skins/
 chown -R zimbra:zimbra /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN
 ```
 
-## 2. Register the skin (as zimbra)
+## 3. Register the skin (as zimbra)
 
 `zmskindeploy` run on the directory that is already in place only registers
 the skin (`zimbraInstalledSkin`) and flushes the cache:
@@ -30,7 +46,7 @@ zmskindeploy /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN
 zmprov fc skin
 ```
 
-## 3. Offer it to users
+## 4. Offer it to users
 
 Add the skin to the list of available themes of a class of service
 (the `+` keeps the existing ones):
@@ -53,7 +69,7 @@ the COS list instead of adding to it: list every skin that account should see
 in the same command (`zmprov ma user@example.com zimbraAvailableSkin a
 zimbraAvailableSkin b ...`).
 
-## 4. Verify
+## 5. Verify
 
 The aggregated stylesheet can be checked without logging in:
 
@@ -84,7 +100,8 @@ Copy the new files over the installed directory and flush. No restart is
 needed, also for changes to `manifest.xml`:
 
 ```sh
-cp -a skins/$SKIN/. /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN/
+tar -xzf $SKIN-$VER.tar.gz -C /opt/zimbra/jetty_base/webapps/zimbra/skins/
+# from a source checkout: cp -a skins/$SKIN/. /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN/
 chown -R zimbra:zimbra /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN
 su - zimbra -c 'zmprov fc skin'
 ```
@@ -135,8 +152,8 @@ The logo licensing rules of Zimbra (see the note at the top of
 ## Troubleshooting
 
 - **White page after login for accounts on the skin.** `img/images.css.js` is
-  missing from the skin directory: the shell JSP needs it. Copy the whole
-  `skins/<SKIN>` directory again.
+  missing from the skin directory: the shell JSP needs it. Unpack or copy
+  the whole `<SKIN>` directory again.
 - **Empty folder tree, no errors in the console.** An image used by the
   coloured-icon compositing failed to load; copy the directory again and
   flush.
