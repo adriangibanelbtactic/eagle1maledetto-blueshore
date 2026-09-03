@@ -86,8 +86,10 @@ licence block.
 CPAL section 14 lets the original developer require the display of its
 attribution; for Zimbra this is the logo shown in the web client. Blueshore
 does not change the form of that attribution: `LogoImgDir` still points to
-Zimbra's `_base/logos` and the skin ships no logo of its own, so the client
-shows the Zimbra logo unless the domain overrides it through Zimbra's own
+Zimbra's `_base/logos`, `AppBannerImg` picks the monochrome Zimbra logo
+there (black or white, as the stock skins do) and the skin ships no logo of
+its own, so the client shows the Zimbra logo unless the domain overrides it
+through Zimbra's own
 `zimbraSkinLogo*` attributes, exactly as with the stock skins. The logo
 licensing rules at the top of `skin.properties` therefore apply unchanged;
 they bind whoever deploys the software, not the skin.

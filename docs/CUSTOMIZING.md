@@ -138,6 +138,9 @@ only show up on dark surfaces.
 - `SelAltC` a muted version of `SelC`: the core default is a light grey.
 - `TopbarC`, `ReadPaneC`, `SurfaceC`, `AppC` as three or four steps of the
   same dark neutral; `HoverC` one step above `SurfaceC`.
+- `AppBannerImg` pointing to `AppBanner_white.png`: the Zimbra banner is
+  monochrome, black on a light top bar and white on a dark one, as in the
+  stock skins.
 - After building, open Mail, Calendar (day/week/month), Tasks, Briefcase,
   Contacts, Preferences **and the compose / appointment / task forms**: those
   forms use native inputs whose white background is only overridden by the
