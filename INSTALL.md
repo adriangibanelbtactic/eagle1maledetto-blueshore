@@ -10,54 +10,100 @@ Paths below are the defaults of a Zimbra 10 installation
 ## 1. Get the skin
 
 Prebuilt skins are attached to every release on
-<https://github.com/eagle1maledetto/blueshore/releases>: one tarball per
-variant, `<SKIN>-<version>.tar.gz`, which unpacks to a `<SKIN>/` directory.
+<https://github.com/eagle1maledetto/blueshore/releases>, two archives per
+variant with the same content: `<SKIN>-<version>.zip`, the format
+`zmskindeploy` takes directly, and `<SKIN>-<version>.tar.gz`. Both hold a
+single `<SKIN>/` directory.
+
+`zmskindeploy` names the skin after the zip file, so save the download as
+`<SKIN>.zip`:
 
 ```sh
 VER=1.0.0
 SKIN=blueshoretide
-curl -fLO https://github.com/eagle1maledetto/blueshore/releases/download/v$VER/$SKIN-$VER.tar.gz
+curl -fLo /tmp/$SKIN.zip https://github.com/eagle1maledetto/blueshore/releases/download/v$VER/$SKIN-$VER.zip
 ```
 
 Alternatively build from a source checkout (`python3 tools/build.py --all`,
 see *How to build* in the [README](README.md)): the result is the same
-directory, under `skins/$SKIN`.
+directory, under `skins/$SKIN`, and `zmskindeploy` accepts it in place of
+the zip.
 
-## 2. Copy the skin into place (as root)
+## 2. Deploy
 
-Zimbra 10 hardens the webapp directories: they are read-only for the `zimbra`
-user, so `zmskindeploy` cannot copy a skin from `/tmp` by itself. Put the
-directory in place as root first, then hand it to `zimbra`:
+Zimbra 10.1 hardens the webapp directories: `zmacl enable`, run at install
+time, makes the whole `/opt/zimbra/jetty/webapps/` tree read-only for the
+`zimbra` user through ACLs. `zmskindeploy` knows nothing about that: run as
+`zimbra` with the ACLs in place it stops with `Failed to create ...` on a new
+skin, but on an update, or on a zip, it fails silently and still prints
+`successfully installed`. Either lift the ACLs for the deploy or put the
+files in place as root.
+
+### As zimbra, lifting the ACLs
+
+`zmacl disable` removes the ACLs from the whole webapps tree, `zmacl enable`
+puts them back: run both, or the web client directories stay writable.
+Zimbra's script has no user check and works as `zimbra` on a stock
+installation, where everything under webapps belongs to `zimbra`.
+
+```sh
+sudo su - zimbra
+SKIN=blueshoretide
+zmacl disable
+zmskindeploy /tmp/$SKIN.zip      # from a source checkout: zmskindeploy /path/to/skins/$SKIN
+zmprov fc skin
+zmacl enable
+```
+
+`zmskindeploy` unpacks the zip (or copies the directory) into
+`/opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN`, replacing an existing
+copy, and registers the name in `zimbraInstalledSkin`. It does not flush the
+skin cache, hence the `zmprov fc skin`. If `setfacl` is not installed `zmacl`
+exits without doing anything; on a build without `zmacl` the directories are
+not hardened and the two `zmacl` lines can be skipped.
+
+### As root, leaving the ACLs alone
+
+Put the directory in place as root, hand it to `zimbra`, then register it:
 
 ```sh
 tar -xzf $SKIN-$VER.tar.gz -C /opt/zimbra/jetty_base/webapps/zimbra/skins/
 # from a source checkout: cp -a skins/$SKIN /opt/zimbra/jetty_base/webapps/zimbra/skins/
 chown -R zimbra:zimbra /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN
+su - zimbra -c "zmskindeploy /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN; zmprov fc skin"
 ```
 
-## 3. Register the skin (as zimbra)
+Run on the directory already in place, `zmskindeploy` only registers the
+skin (`zimbraInstalledSkin`).
 
-`zmskindeploy` run on the directory that is already in place only registers
-the skin (`zimbraInstalledSkin`) and flushes the cache:
+## 3. Offer it to users
+
+Which themes an account may choose is `zimbraAvailableSkin`, read from the
+account, then its class of service, then its domain. When it is unset at
+every level, the admin console's *Do not limit Themes available to users in
+this COS*, every installed skin is offered and there is nothing to do: after
+the cache flush the skin is in *Preferences → General → Theme*. Check the
+class of service first:
 
 ```sh
-su - zimbra
-zmskindeploy /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN
-zmprov fc skin
+zmprov gc default zimbraAvailableSkin
 ```
 
-## 4. Offer it to users
+An empty answer means no limit. **Do not add the skin to a class of service
+that returns nothing**: the first value turns "any installed theme" into
+"only these", and every other skin disappears from the theme picker of those
+users.
 
-Add the skin to the list of available themes of a class of service
-(the `+` keeps the existing ones):
+If the class of service does limit themes, add the skin to its list, in the
+admin console (*Configure → Class of Service → default → Themes*, tick the
+skin) or on the command line, where `+` appends to the existing values:
 
 ```sh
 zmprov mc default +zimbraAvailableSkin $SKIN
 zmprov fc skin
 ```
 
-Users then find it in *Preferences → General → Theme*. To make it the default
-for new sessions of that COS:
+To make it the default theme for new sessions of that class of service:
 
 ```sh
 zmprov mc default zimbraPrefSkin $SKIN
@@ -69,7 +115,7 @@ the COS list instead of adding to it: list every skin that account should see
 in the same command (`zmprov ma user@example.com zimbraAvailableSkin a
 zimbraAvailableSkin b ...`).
 
-## 5. Verify
+## 4. Verify
 
 The aggregated stylesheet can be checked without logging in:
 
@@ -96,8 +142,10 @@ safe; keep the rule if you make your own variant.
 
 ## Updating
 
-Copy the new files over the installed directory and flush. No restart is
-needed, also for changes to `manifest.xml`:
+Deploy the new version the same way as the first one: `zmskindeploy` on a
+zip, or on a directory outside `skins/`, replaces the installed copy (as
+`zimbra`, between `zmacl disable` and `zmacl enable`). As root, unpack over
+the installed directory instead:
 
 ```sh
 tar -xzf $SKIN-$VER.tar.gz -C /opt/zimbra/jetty_base/webapps/zimbra/skins/
@@ -105,6 +153,9 @@ tar -xzf $SKIN-$VER.tar.gz -C /opt/zimbra/jetty_base/webapps/zimbra/skins/
 chown -R zimbra:zimbra /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN
 su - zimbra -c 'zmprov fc skin'
 ```
+
+Either way finish with `zmprov fc skin`. No restart is needed, also for
+changes to `manifest.xml`.
 
 Browsers cache the aggregated CSS for 30 days and the cache key is the Zimbra
 build version, which does not change when skin files do. Users who still see
@@ -115,9 +166,11 @@ session.
 
 ```sh
 rm -rf /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN
-su - zimbra -c "zmprov mcf -zimbraInstalledSkin $SKIN; zmprov mc default -zimbraAvailableSkin $SKIN; zmprov fc skin"
+su - zimbra -c "zmprov mcf -zimbraInstalledSkin $SKIN; zmprov fc skin"
 ```
 
+If the skin had been added to the list of a class of service or an account,
+remove it there too (`zmprov mc default -zimbraAvailableSkin $SKIN`).
 Accounts whose `zimbraPrefSkin` still points to the removed skin fall back to
 the default skin on next login.
 
@@ -162,3 +215,6 @@ The logo licensing rules of Zimbra (see the note at the top of
   but if you edit `skin.css` test the endpoint after every change.
 - **Theme shows the right name but looks like the default skin.** See
   "Verify" above (registration not picked up) or "Domain theme colours".
+- **`zmskindeploy` says "successfully installed" but nothing changed.** It
+  was run as `zimbra` with the ACLs in place (see "Deploy"): the copy failed
+  silently. Run `zmacl disable` first, or put the files in place as root.

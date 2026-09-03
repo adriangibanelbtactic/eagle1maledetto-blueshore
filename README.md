@@ -12,8 +12,9 @@ only the palette changes.
 | **Sand** (amber) | `blueshoresand` | `blueshoresanddark` |
 
 Each variant is a separate Zimbra skin: users pick one in
-*Preferences → General → Theme*, administrators enable them per class of
-service or per account. There is no day/night toggle inside the skin by design.
+*Preferences → General → Theme*, administrators can limit the choice per
+class of service or per account. There is no day/night toggle inside the
+skin by design.
 
 ## Screenshots
 
@@ -64,23 +65,28 @@ More views (calendar, compose) for every variant are in
 ## Install
 
 Prebuilt skins are attached to every
-[GitHub release](https://github.com/eagle1maledetto/blueshore/releases), one
-tarball per variant. Short version, as `root` on the mailbox server (full
-procedure, updates, removal and troubleshooting in [INSTALL.md](INSTALL.md)):
+[GitHub release](https://github.com/eagle1maledetto/blueshore/releases), a
+zip and a tarball per variant. Short version, as the `zimbra` user on the
+mailbox server (full procedure, a root-only alternative, updates, removal and
+troubleshooting in [INSTALL.md](INSTALL.md)):
 
 ```sh
+sudo su - zimbra
 VER=1.0.0
 SKIN=blueshoretide
-curl -fLO https://github.com/eagle1maledetto/blueshore/releases/download/v$VER/$SKIN-$VER.tar.gz
-tar -xzf $SKIN-$VER.tar.gz -C /opt/zimbra/jetty_base/webapps/zimbra/skins/
-chown -R zimbra:zimbra /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN
-su - zimbra -c "zmskindeploy /opt/zimbra/jetty_base/webapps/zimbra/skins/$SKIN"
-su - zimbra -c "zmprov mc default +zimbraAvailableSkin $SKIN && zmprov fc skin"
+zmacl disable
+curl -fLo /tmp/$SKIN.zip https://github.com/eagle1maledetto/blueshore/releases/download/v$VER/$SKIN-$VER.zip
+zmskindeploy /tmp/$SKIN.zip
+zmprov fc skin
+zmacl enable
 ```
 
 Repeat for each variant you want to offer. From a source checkout, build
-first (next section) and replace the `curl` and `tar` lines with
-`cp -a skins/$SKIN /opt/zimbra/jetty_base/webapps/zimbra/skins/`.
+first (next section) and point `zmskindeploy` at the built directory instead
+of the zip (`zmskindeploy /path/to/skins/$SKIN`). Users then find the skin in
+*Preferences → General → Theme*, unless their class of service limits the
+themes: see *Offer it to users* in INSTALL.md before touching
+`zimbraAvailableSkin`.
 
 ## How to build
 
@@ -97,8 +103,8 @@ python3 tools/build.py tide sanddark  # or only the variants you want
 
 Each `skins/<SkinName>/` is a complete skin, ready to copy into
 `/opt/zimbra/jetty_base/webapps/zimbra/skins/` as described in
-[INSTALL.md](INSTALL.md). The build is deterministic: the release tarballs
-are byte for byte what `build.py --all` produces at the tagged commit.
+[INSTALL.md](INSTALL.md). The build is deterministic: the release archives
+hold byte for byte what `build.py --all` produces at the tagged commit.
 
 ### Make your own variant
 
